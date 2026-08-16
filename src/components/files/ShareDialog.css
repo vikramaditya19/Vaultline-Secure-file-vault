@@ -1,0 +1,53 @@
+.share-dialog__form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+}
+.share-dialog__form .field {
+  flex: 1;
+}
+
+.share-dialog__list {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.share-dialog__list-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.share-dialog__muted {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.share-dialog__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.share-dialog__revoke {
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-size: 12px;
+  padding: 4px 8px;
+}
+.share-dialog__revoke:hover {
+  background: var(--danger-dim);
+  border-radius: var(--radius-sm);
+}
+
+.share-dialog__note {
+  margin-top: var(--space-4);
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}

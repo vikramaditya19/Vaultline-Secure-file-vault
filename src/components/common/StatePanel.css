@@ -1,0 +1,42 @@
+.state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  padding: var(--space-7) var(--space-4);
+  color: var(--text-secondary);
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.state-panel__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.state-panel__icon--neutral {
+  background: var(--bg-surface-3);
+  color: var(--text-secondary);
+}
+
+.state-panel__icon--danger {
+  background: var(--danger-dim);
+  color: var(--danger);
+}
+
+.state-panel__title {
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.state-panel__description {
+  font-size: 13px;
+  line-height: 1.6;
+}
