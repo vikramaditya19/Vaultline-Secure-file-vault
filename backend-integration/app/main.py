@@ -1,12 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,Request
+
 
 app = FastAPI()
 
-@app.get("/")
-
-def greet():
+@app.get("/", include_in_schema=False)
+def home():
     return {"message": "Hello, World!"}
 
-@app.get("/items")
-def get_all_items():
-    return {"items": ["item1", "item2", "item3"]}
+@app.get("/login")
+def get_login_info():
+    return {"message": "Login successful!"}
