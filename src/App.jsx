@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { ToastProvider } from './context/ToastContext'
 import { ModalProvider } from './context/ModalContext'
@@ -8,6 +8,7 @@ import { AuthLayout } from './layouts/AuthLayout'
 import { AppLayout } from './layouts/AppLayout'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
+import { LandingPage } from './pages/LandingPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { FilesPage } from './pages/FilesPage'
 import { FileDetailsPage } from './pages/FileDetailsPage'
@@ -22,7 +23,7 @@ export default function App() {
         <ModalProvider>
           <AuthProvider>
             <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/" element={<LandingPage />} />
 
               <Route element={<AuthLayout />}>
                 <Route path="/login" element={<LoginPage />} />

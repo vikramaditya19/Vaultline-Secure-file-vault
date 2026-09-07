@@ -1,0 +1,40 @@
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.landing-hero {
+  background: transparent;
+  padding: 2.5rem 1rem;
+}
+
+.landing-hero__inner {
+  max-width: 920px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.landing-hero__title {
+  font-size: 2rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.landing-hero__subtitle {
+  color: var(--muted-color, #9aa0a6);
+  margin: 0 0 1rem 0;
+}
+
+.landing-hero__actions > * + * {
+  margin-left: 0.5rem;
+}
+
+.landing-main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem 1rem;
+}
+
+.landing-section__title {
+  margin: 0 0 1rem 0;
+}
