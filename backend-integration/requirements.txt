@@ -1,0 +1,21 @@
+# Core Framework
+fastapi==0.115.0          # Modern, fast web framework for building APIs
+uvicorn[standard]==0.32.0 # ASGI server to run FastAPI (with websockets support)
+
+# Database
+sqlalchemy==2.0.35        # SQL toolkit and ORM (Object Relational Mapper)
+psycopg2-binary==2.9.9    # PostgreSQL adapter for Python
+alembic==1.13.3           # Database migration tool
+
+# Data Validation
+pydantic==2.9.2           # Data validation using Python type hints
+pydantic-settings==2.6.0  # Settings management from environment variables
+
+# Authentication & Security
+passlib[bcrypt]==1.7.4    # Password hashing library with bcrypt algorithm
+python-jose[cryptography]==3.3.0  # JWT token creation and verification
+python-multipart==0.0.12  # Required for file uploads (multipart/form-data)
+
+# Utilities
+python-dotenv==1.0.1      # Load environment variables from .env files
+aiofiles==24.1.0          # Async file operations for better performance
