@@ -1,0 +1,103 @@
+Alembic Database Migrations
+===========================
+
+This directory contains database migration scripts for the Vaultline backend.
+
+What Are Migrations?
+--------------------
+Migrations track changes to your database schema over time:
+- Adding tables
+- Adding/removing columns
+- Changing data types
+- Creating indexes
+- Etc.
+
+Directory Structure:
+-------------------
+alembic/
+├── versions/          # Migration scripts (auto-generated)
+├── env.py            # Alembic environment configuration
+├── script.py.mako    # Template for new migrations
+└── README            # This file
+
+Common Commands:
+----------------
+
+1. Create a new migration (after changing models.py):
+   alembic revision --autogenerate -m "Description of change"
+
+2. Apply migrations (upgrade to latest):
+   alembic upgrade head
+
+3. Rollback one migration:
+   alembic downgrade -1
+
+4. See migration history:
+   alembic history
+
+5. Show current version:
+   alembic current
+
+Migration Workflow:
+-------------------
+
+1. Edit app/models.py (add/modify tables)
+2. Generate migration: alembic revision --autogenerate -m "Added email to users"
+3. Review the generated file in versions/
+4. Apply migration: alembic upgrade head
+5. Commit both models.py and the migration file to git
+
+Example:
+--------
+
+# Add a new column to User model in models.py
+class User(Base):
+    ...
+    phone_number = Column(String(20), nullable=True)
+
+# Generate migration
+$ alembic revision --autogenerate -m "Add phone number to users"
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.autogenerate.compare] Detected added column 'users.phone_number'
+  Generating alembic\versions\2024_01_15_1234_add_phone_number_to_users.py ... done
+
+# Review the generated file (important!)
+# Then apply it
+$ alembic upgrade head
+INFO  [alembic.runtime.migration] Running upgrade abc123 -> def456, Add phone number to users
+
+Production Deployment:
+----------------------
+
+Before deploying new code:
+1. Backup the database!
+2. Apply migrations: alembic upgrade head
+3. Deploy new application code
+4. Verify everything works
+
+If something goes wrong:
+1. Rollback code deployment
+2. Rollback migration: alembic downgrade -1
+3. Restore database backup if needed
+
+Safety Tips:
+------------
+- Always backup before migrations
+- Review auto-generated migrations (they're not perfect!)
+- Test migrations on staging first
+- Keep migrations small and focused
+- Never edit applied migrations (create new ones)
+- Commit migrations with related code changes
+
+Troubleshooting:
+----------------
+
+Error: "Can't locate revision identified by 'abc123'"
+Solution: Delete alembic/versions/*.py and regenerate from scratch
+
+Error: "Target database is not up to date"
+Solution: Run: alembic upgrade head
+
+Error: "Table 'users' already exists"
+Solution: You might need to: alembic stamp head (to mark current state)
