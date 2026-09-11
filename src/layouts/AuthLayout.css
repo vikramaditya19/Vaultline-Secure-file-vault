@@ -6,50 +6,83 @@
   justify-content: center;
   gap: var(--space-5);
   padding: var(--space-5);
-  background: radial-gradient(circle at 50% 0%, var(--bg-surface-1), var(--bg-base) 60%);
+  background: linear-gradient(135deg, var(--bg-base) 0%, var(--accent-primary-dim) 50%, var(--accent-secondary-dim) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-layout::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.1), transparent);
+  border-radius: 50%;
+}
+
+.auth-layout::after {
+  content: '';
+  position: absolute;
+  bottom: -40%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.08), transparent);
+  border-radius: 50%;
 }
 
 .auth-layout__panel {
   width: 100%;
-  max-width: 380px;
-  background: var(--bg-surface-1);
-  border: 1px solid var(--border-subtle);
+  max-width: 420px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
-  padding: var(--space-6);
-  box-shadow: var(--shadow-panel);
+  padding: var(--space-7);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  position: relative;
+  z-index: 1;
+  animation: slideInUp var(--transition-slow);
 }
 
 .auth-layout__brand {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  font-size: 15px;
-  font-weight: 600;
-  margin-bottom: var(--space-6);
+  gap: var(--space-3);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: var(--space-7);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .auth-layout__brand-mark {
-  width: 20px;
-  height: 20px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 2px solid var(--accent);
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
+  flex-shrink: 0;
 }
+
 .auth-layout__brand-mark::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 2px;
-  height: 6px;
-  background: var(--accent);
-  transform: translate(-50%, -100%);
+  content: '🔐';
+  font-size: 1.5rem;
 }
 
 .auth-layout__tagline {
-  max-width: 380px;
+  max-width: 420px;
   text-align: center;
-  font-size: 12px;
+  font-size: 0.9rem;
   color: var(--text-muted);
   line-height: 1.6;
+  position: relative;
+  z-index: 1;
 }

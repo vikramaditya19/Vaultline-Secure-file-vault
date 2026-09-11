@@ -5,19 +5,19 @@
 }
 
 .field__label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .field__input {
   background: var(--bg-surface-2);
   border: 1px solid var(--border-default);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
   color: var(--text-primary);
-  font-size: 14px;
-  transition: border-color 120ms ease;
+  font-size: 0.95rem;
+  transition: all var(--transition-base);
 }
 
 .field__input::placeholder {
@@ -25,20 +25,34 @@
 }
 
 .field__input:focus {
-  border-color: var(--accent);
   outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.field__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .field__input--error {
   border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.field__input--error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
 .field__error {
-  font-size: 12px;
+  font-size: 0.85rem;
   color: var(--danger);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
 }
 
 .field__hint {
-  font-size: 12px;
+  font-size: 0.85rem;
   color: var(--text-muted);
 }
