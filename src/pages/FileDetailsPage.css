@@ -1,68 +1,85 @@
 .file-details {
-  max-width: 560px;
+  max-width: 700px;
+  width: 100%;
 }
 
 .file-details__back {
   background: none;
   border: none;
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: 0.95rem;
   padding: 0;
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: color var(--transition-base);
 }
+
 .file-details__back:hover {
-  color: var(--text-primary);
+  color: var(--accent-primary);
 }
 
 .file-details__panel {
   background: var(--bg-surface-1);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.08);
 }
 
 .file-details__icon {
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   border-radius: var(--radius-md);
-  background: var(--bg-surface-3);
-  color: var(--accent-strong);
+  background: var(--accent-primary-dim);
+  color: var(--accent-primary-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
   font-family: var(--font-mono);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
 }
 
 .file-details__name {
-  font-size: 18px;
+  font-size: 1.75rem;
+  font-weight: 700;
   word-break: break-word;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
+  color: var(--text-primary);
 }
 
 .file-details__meta {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-4);
+  gap: var(--space-6);
   margin: 0 0 var(--space-6);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .file-details__meta dt {
-  font-size: 11px;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  margin-bottom: 2px;
+  margin-bottom: var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
 }
 
 .file-details__meta dd {
   margin: 0;
-  font-size: 13px;
+  font-size: 1rem;
   color: var(--text-primary);
+  font-weight: 500;
 }
 
 .file-details__actions {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-3);
   flex-wrap: wrap;
 }

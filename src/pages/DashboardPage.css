@@ -1,50 +1,93 @@
 .dashboard-page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  max-width: 860px;
+  gap: var(--space-7);
+  max-width: 1200px;
+  width: 100%;
 }
 
 .dashboard-stats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-5);
 }
 
 .dashboard-stat {
-  background: var(--bg-surface-1);
-  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  padding: var(--space-6);
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-3);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base);
+  cursor: default;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+  }
+
+  &:hover {
+    border-color: var(--accent-primary);
+    background: var(--bg-surface-3);
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+
+    &::before {
+      opacity: 1;
+    }
+  }
 }
 
 .dashboard-stat__value {
-  font-size: 26px;
-  font-weight: 600;
-  color: var(--accent-strong);
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .dashboard-stat__label {
-  font-size: 12px;
+  font-size: 0.9rem;
   color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.dashboard-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 .dashboard-section__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--space-3);
 }
 
 .dashboard-section__title {
-  font-size: 15px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .dashboard-stats {
     grid-template-columns: 1fr;
   }
+
+  .dashboard-page {
+    gap: var(--space-5);
+  }
 }
+

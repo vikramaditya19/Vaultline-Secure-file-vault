@@ -1,13 +1,18 @@
 .auth-page__title {
-  font-size: 19px;
-  margin-bottom: var(--space-2);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .auth-page__subtitle {
-  font-size: 13px;
+  font-size: 1rem;
   color: var(--text-secondary);
   line-height: 1.6;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-6);
 }
 
 .auth-page__form {
@@ -17,24 +22,30 @@
 }
 
 .auth-page__error {
-  font-size: 13px;
+  font-size: 0.95rem;
   color: var(--danger);
-  background: var(--danger-dim);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  animation: slideInDown var(--transition-base);
 }
 
 .auth-page__switch {
-  margin-top: var(--space-5);
-  font-size: 13px;
+  margin-top: var(--space-6);
+  font-size: 0.95rem;
   color: var(--text-secondary);
   text-align: center;
+  transition: color var(--transition-base);
 }
 
 .auth-page__switch a {
-  color: var(--accent-strong);
+  color: var(--accent-primary);
   text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-base);
 }
+
 .auth-page__switch a:hover {
-  text-decoration: underline;
+  color: var(--accent-primary-light);
 }
