@@ -6,7 +6,7 @@
   justify-content: center;
   gap: var(--space-5);
   padding: var(--space-5);
-  background: linear-gradient(135deg, var(--bg-base) 0%, var(--accent-primary-dim) 50%, var(--accent-secondary-dim) 100%);
+  background: linear-gradient(135deg, var(--bg-base) 0%, var(--bg-surface-2) 50%, var(--bg-surface-1) 100%);
   position: relative;
   overflow: hidden;
 }
@@ -18,7 +18,7 @@
   left: -20%;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.1), transparent);
+  background: radial-gradient(circle, rgba(212, 165, 116, 0.06), transparent);
   border-radius: 50%;
 }
 
@@ -29,58 +29,55 @@
   right: -10%;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.08), transparent);
+  background: radial-gradient(circle, rgba(122, 143, 168, 0.05), transparent);
   border-radius: 50%;
 }
 
 .auth-layout__panel {
   width: 100%;
   max-width: 420px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--glass-border);
+  background: var(--bg-surface-1);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
   padding: var(--space-7);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-panel);
   position: relative;
   z-index: 1;
-  animation: slideInUp var(--transition-slow);
+  animation: gentle-scale var(--transition-slow);
 }
 
 .auth-layout__brand {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   margin-bottom: var(--space-7);
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-primary);
 }
 
 .auth-layout__brand-mark {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, var(--accent-primary) 0%, #c09060 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(212, 165, 116, 0.15);
 }
 
 .auth-layout__brand-mark::after {
   content: '🔐';
-  font-size: 1.5rem;
+  font-size: 1.2rem;
 }
 
 .auth-layout__tagline {
   max-width: 420px;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-muted);
   line-height: 1.6;
   position: relative;

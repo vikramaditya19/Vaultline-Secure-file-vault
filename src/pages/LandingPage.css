@@ -5,7 +5,7 @@
 }
 
 .landing-hero {
-  background: linear-gradient(135deg, var(--accent-primary-dim) 0%, var(--accent-secondary-dim) 100%);
+  background: linear-gradient(135deg, var(--bg-surface-2) 0%, var(--bg-surface-3) 100%);
   padding: var(--space-8) var(--space-5);
   display: flex;
   align-items: center;
@@ -22,7 +22,7 @@
   right: -10%;
   width: 600px;
   height: 600px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent);
+  background: radial-gradient(circle, rgba(212, 165, 116, 0.08), transparent);
   border-radius: 50%;
 }
 
@@ -33,7 +33,7 @@
   left: -5%;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.1), transparent);
+  background: radial-gradient(circle, rgba(122, 143, 168, 0.06), transparent);
   border-radius: 50%;
 }
 
@@ -46,20 +46,19 @@
 }
 
 .landing-hero__title {
-  font-size: 3.5rem;
-  font-weight: 800;
+  font-size: 2.8rem;
+  font-weight: 700;
   margin-bottom: var(--space-4);
-  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
 .landing-hero__subtitle {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: var(--text-secondary);
   margin-bottom: var(--space-6);
   line-height: 1.8;
+  font-weight: 400;
 }
 
 .landing-hero__actions {
@@ -70,7 +69,7 @@
 }
 
 .landing-hero__actions .btn {
-  min-width: 160px;
+  min-width: 150px;
 }
 
 .landing-main {
@@ -88,10 +87,11 @@
 }
 
 .landing-section__title {
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: var(--space-3);
+  letter-spacing: -0.015em;
 }
 
 @media (max-width: 768px) {
@@ -101,11 +101,11 @@
   }
 
   .landing-hero__title {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .landing-hero__subtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .landing-hero__actions {
@@ -122,6 +122,6 @@
   }
 
   .landing-section__title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 }

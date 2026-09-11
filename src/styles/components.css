@@ -1,11 +1,12 @@
 /* ============================================================================
-   Component Library - Reusable UI Elements
+   Component Library - Restrained, Natural Design
+   Inspired by Gandalf Design System - Security-focused, warm restraint
    ============================================================================ */
 
 @import './variables.css';
 
 /* ============================================================================
-   BUTTONS
+   BUTTONS - Gold guides; it does not decorate
    ============================================================================ */
 
 .btn {
@@ -19,119 +20,89 @@
   font-size: 0.95rem;
   transition: all var(--transition-base);
   cursor: pointer;
-  border: none;
+  border: 1px solid transparent;
   text-decoration: none;
   white-space: nowrap;
   user-select: none;
   position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    transform: translate(-50%, -50%);
-    transition: width var(--transition-base), height var(--transition-base);
-  }
-
-  &:hover::before {
-    width: 300px;
-    height: 300px;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
 }
 
-/* Primary Button */
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primary Button - Gold accent */
 .btn-primary {
-  background: var(--gradient-primary);
-  color: white;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-
-  &:hover:not(:disabled) {
-    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-    transform: translateY(-2px);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0);
-  }
+  background: linear-gradient(135deg, var(--accent-primary) 0%, #c09060 100%);
+  color: #1a1914;
+  border: 1px solid var(--accent-primary);
+  box-shadow: 0 2px 4px rgba(212, 165, 116, 0.15);
 }
 
-/* Secondary Button */
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 4px 8px rgba(212, 165, 116, 0.25);
+}
+
+/* Secondary Button - Muted slate */
 .btn-secondary {
   background: var(--bg-surface-2);
   color: var(--text-primary);
   border: 1px solid var(--border-default);
-
-  &:hover:not(:disabled) {
-    background: var(--bg-surface-3);
-    border-color: var(--accent-primary);
-  }
 }
 
-/* Danger Button */
+.btn-secondary:hover:not(:disabled) {
+  background: var(--bg-surface-3);
+  border-color: var(--accent-primary);
+}
+
+/* Danger Button - Muted red */
 .btn-danger {
-  background: var(--danger);
-  color: white;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-
-  &:hover:not(:disabled) {
-    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
-    transform: translateY(-2px);
-  }
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid var(--danger);
 }
 
-/* Ghost Button */
+.btn-danger:hover:not(:disabled) {
+  background: rgba(217, 115, 115, 0.08);
+}
+
+/* Ghost Button - Minimal */
 .btn-ghost {
   background: transparent;
   color: var(--accent-primary);
-  border: 1px solid var(--accent-primary);
-
-  &:hover:not(:disabled) {
-    background: rgba(59, 130, 246, 0.1);
-  }
+  border: none;
 }
 
-/* Small Button */
+.btn-ghost:hover:not(:disabled) {
+  color: var(--accent-primary-light);
+}
+
 .btn-sm {
   padding: var(--space-2) var(--space-3);
   font-size: 0.85rem;
 }
 
-/* Large Button */
 .btn-lg {
   padding: var(--space-4) var(--space-6);
   font-size: 1rem;
   min-height: 48px;
 }
 
-/* Full Width */
 .btn-block {
   width: 100%;
 }
 
-/* Icon Button */
-.btn-icon {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 /* ============================================================================
-   CARDS
+   CARDS - Sealed by default, visible boundary
    ============================================================================ */
 
 .card {
@@ -141,22 +112,11 @@
   padding: var(--space-5);
   transition: all var(--transition-base);
   position: relative;
-  overflow: hidden;
+}
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-default), transparent);
-  }
-
-  &:hover {
-    border-color: var(--border-default);
-    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
-  }
+.card:hover {
+  border-color: var(--border-default);
+  box-shadow: var(--shadow-md);
 }
 
 .card-header {
@@ -166,7 +126,7 @@
 }
 
 .card-title {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: var(--text-primary);
 }
@@ -190,7 +150,7 @@
 }
 
 /* ============================================================================
-   BADGES
+   BADGES - Quiet identity, explicit state
    ============================================================================ */
 
 .badge {
@@ -206,32 +166,32 @@
 }
 
 .badge-primary {
-  background: rgba(59, 130, 246, 0.15);
-  color: var(--accent-primary-light);
+  background: rgba(212, 165, 116, 0.12);
+  color: var(--accent-primary);
 }
 
 .badge-success {
-  background: rgba(16, 185, 129, 0.15);
+  background: rgba(95, 184, 120, 0.12);
   color: var(--success);
 }
 
 .badge-danger {
-  background: rgba(239, 68, 68, 0.15);
+  background: rgba(217, 115, 115, 0.12);
   color: var(--danger);
 }
 
 .badge-warning {
-  background: rgba(245, 158, 11, 0.15);
+  background: rgba(212, 165, 116, 0.12);
   color: var(--warning);
 }
 
 .badge-info {
-  background: rgba(6, 182, 212, 0.15);
+  background: rgba(122, 143, 168, 0.12);
   color: var(--info);
 }
 
 /* ============================================================================
-   INPUTS
+   INPUTS - Technical honesty, show the machinery
    ============================================================================ */
 
 .input-group {
@@ -254,22 +214,22 @@
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-size: 0.95rem;
-  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+  transition: all var(--transition-base);
+}
 
-  &::placeholder {
-    color: var(--text-muted);
-  }
+.input-field::placeholder {
+  color: var(--text-muted);
+}
 
-  &:focus {
-    outline: none;
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
+.input-field:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.08);
+}
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+.input-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .input-hint {
@@ -284,50 +244,44 @@
 }
 
 /* ============================================================================
-   ALERTS
+   ALERTS - Explicit state labels
    ============================================================================ */
 
 .alert {
   padding: var(--space-4);
   border-radius: var(--radius-md);
-  border-left: 4px solid;
+  border-left: 3px solid;
   display: flex;
   gap: var(--space-3);
   align-items: flex-start;
-
-  svg {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-  }
 }
 
 .alert-success {
-  background: rgba(16, 185, 129, 0.1);
+  background: rgba(95, 184, 120, 0.08);
   border-color: var(--success);
   color: var(--success);
 }
 
 .alert-danger {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(217, 115, 115, 0.08);
   border-color: var(--danger);
   color: var(--danger);
 }
 
 .alert-warning {
-  background: rgba(245, 158, 11, 0.1);
+  background: rgba(212, 165, 116, 0.08);
   border-color: var(--warning);
   color: var(--warning);
 }
 
 .alert-info {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
+  background: rgba(122, 143, 168, 0.08);
+  border-color: var(--info);
+  color: var(--info);
 }
 
 /* ============================================================================
-   LOADERS
+   LOADERS - Subtle, purposeful motion
    ============================================================================ */
 
 .spinner {
@@ -357,46 +311,42 @@
 }
 
 /* ============================================================================
-   TABLES
+   TABLES - Inspectable, technical honesty
    ============================================================================ */
 
 .table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
+}
 
-  thead {
-    background: var(--bg-surface-2);
-    border-bottom: 2px solid var(--border-default);
-  }
+.table thead {
+  background: var(--bg-surface-2);
+  border-bottom: 1px solid var(--border-default);
+}
 
-  th {
-    padding: var(--space-3) var(--space-4);
-    text-align: left;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
-  }
+.table th {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
 
-  td {
-    padding: var(--space-3) var(--space-4);
-    border-bottom: 1px solid var(--border-subtle);
-    color: var(--text-secondary);
-  }
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
 
-  tbody tr {
-    transition: background-color var(--transition-base);
-
-    &:hover {
-      background-color: var(--bg-surface-2);
-    }
-  }
+.table tbody tr:hover {
+  background-color: var(--bg-surface-2);
 }
 
 /* ============================================================================
-   MODALS & OVERLAYS
+   MODALS - Sealed surfaces
    ============================================================================ */
 
 .modal-backdrop {
@@ -405,7 +355,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -422,36 +372,36 @@
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
-  animation: slideInUp var(--transition-base);
+  animation: gentle-scale var(--transition-base);
+}
 
-  &-header {
-    padding: var(--space-5);
-    border-bottom: 1px solid var(--border-subtle);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.modal-header {
+  padding: var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  &-title {
-    font-size: 1.25rem;
-    font-weight: 700;
-  }
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
 
-  &-body {
-    padding: var(--space-5);
-  }
+.modal-body {
+  padding: var(--space-5);
+}
 
-  &-footer {
-    padding: var(--space-5);
-    border-top: 1px solid var(--border-subtle);
-    display: flex;
-    gap: var(--space-3);
-    justify-content: flex-end;
-  }
+.modal-footer {
+  padding: var(--space-5);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
 }
 
 /* ============================================================================
-   DROPDOWNS & MENUS
+   DROPDOWNS & MENUS - Quiet surfaces
    ============================================================================ */
 
 .dropdown-menu {
@@ -482,24 +432,24 @@
   width: 100%;
   text-align: left;
   font-size: 0.95rem;
+}
 
-  &:hover {
-    background: var(--bg-surface-2);
-    color: var(--text-primary);
-  }
+.dropdown-item:hover {
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+}
 
-  &.active {
-    background: var(--accent-primary-dim);
-    color: var(--accent-primary);
-  }
+.dropdown-item.active {
+  background: rgba(212, 165, 116, 0.12);
+  color: var(--accent-primary);
+}
 
-  &.danger {
-    color: var(--danger);
+.dropdown-item.danger {
+  color: var(--danger);
+}
 
-    &:hover {
-      background: rgba(239, 68, 68, 0.1);
-    }
-  }
+.dropdown-item.danger:hover {
+  background: rgba(217, 115, 115, 0.08);
 }
 
 .dropdown-divider {
@@ -509,7 +459,7 @@
 }
 
 /* ============================================================================
-   TABS
+   TABS - Compact hierarchy, explicit state
    ============================================================================ */
 
 .tab-list {
@@ -527,30 +477,31 @@
   cursor: pointer;
   position: relative;
   transition: color var(--transition-base);
+  font-size: 0.95rem;
+}
 
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--accent-primary);
-    transform: scaleX(0);
-    transition: transform var(--transition-base);
-  }
+.tab-button::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent-primary);
+  transform: scaleX(0);
+  transition: transform var(--transition-base);
+}
 
-  &:hover {
-    color: var(--text-primary);
-  }
+.tab-button:hover {
+  color: var(--text-primary);
+}
 
-  &.active {
-    color: var(--accent-primary);
+.tab-button.active {
+  color: var(--accent-primary);
+}
 
-    &::after {
-      transform: scaleX(1);
-    }
-  }
+.tab-button.active::after {
+  transform: scaleX(1);
 }
 
 .tab-panel {
@@ -559,11 +510,11 @@
 }
 
 /* ============================================================================
-   PROGRESS
+   PROGRESS - Technical visibility
    ============================================================================ */
 
 .progress-bar {
-  height: 4px;
+  height: 3px;
   background: var(--bg-surface-3);
   border-radius: var(--radius-full);
   overflow: hidden;
@@ -571,7 +522,7 @@
 
 .progress-fill {
   height: 100%;
-  background: var(--gradient-primary);
+  background: linear-gradient(90deg, var(--accent-primary) 0%, #c09060 100%);
   transition: width var(--transition-base);
 }
 
@@ -641,8 +592,4 @@
 
 .opacity-50 {
   opacity: 0.5;
-}
-
-.cursor-pointer {
-  cursor: pointer;
 }
