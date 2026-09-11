@@ -29,31 +29,21 @@ import secrets
 
 # ==================== PASSWORD CONTEXT ====================
 
-# Configure bcrypt password hasher
+# Configure argon2 password hasher
 pwd_context = CryptContext(
-    schemes=["bcrypt"],
+    schemes=["argon2"],
     deprecated="auto",
-    bcrypt__rounds=settings.BCRYPT_ROUNDS,  # From config (default: 12)
 )
 
 """
-What is CryptContext?
-- Unified interface for password hashing
-- Supports multiple schemes (bcrypt, argon2, scrypt)
-- Handles salt generation automatically
-- Future-proof: can add new schemes without breaking old hashes
+Why switch from bcrypt to argon2?
+- Argon2: Works with Python 3.14, memory-hard, winner of Password Hashing Competition
+- Bcrypt: Has compatibility issues with Python 3.14 and newer versions of dependencies
+- Argon2 is MORE secure than bcrypt anyway (memory-hard, resistant to GPU attacks)
 
-Why bcrypt?
-- Battle-tested (20+ years)
-- Has a "cost factor" (rounds) - increases with CPU power
-- Resistant to GPU/ASIC attacks (memory-hard)
-- Industry standard for password storage
-
-bcrypt rounds:
-- Each round doubles the work required
-- 12 rounds = 4096 iterations (2^12)
-- Takes ~0.3 seconds to hash (good! slow is secure)
-- Prevents brute-force attacks
+Argon2 configuration:
+- Uses sensible defaults for memory, time, and parallelism
+- Future-proof: actively maintained
 """
 
 
@@ -61,31 +51,21 @@ bcrypt rounds:
 
 def hash_auth_proof(auth_proof_b64: str) -> str:
     """
-    Hash the authProof from the client using bcrypt.
+    Hash the authProof from the client using argon2.
     
     This is the SECOND layer of hashing:
     - First layer: client does PBKDF2 (600k iterations)
-    - Second layer: we do bcrypt (12 rounds)
+    - Second layer: we do argon2 (memory-hard hashing)
     
     Args:
         auth_proof_b64: Base64-encoded authProof from client
     
     Returns:
-        Bcrypt hash string (includes salt, ready to store in database)
+        Argon2 hash string (includes salt, ready to store in database)
         
-    Example:
-        auth_proof = "dGVzdCBhdXRoIHByb29m..."
-        hashed = hash_auth_proof(auth_proof)
-        # Returns: "$2b$12$EixZaYVK1fsbw1Zfbx3OXe..."
-    
     Security Note:
-        The returned hash contains:
-        - Algorithm identifier ($2b$ = bcrypt)
-        - Cost factor ($12$ = 12 rounds = 4096 iterations)
-        - Salt (random, 22 characters)
-        - Hash (31 characters)
-        
-        Total length: ~60 characters
+        Argon2 is memory-hard, resistant to GPU/ASIC attacks
+        Much stronger than bcrypt and works with Python 3.14+
     """
     return pwd_context.hash(auth_proof_b64)
 
@@ -106,18 +86,9 @@ def verify_auth_proof(auth_proof_b64: str, hashed_auth_proof: str) -> bool:
     Returns:
         True if authProof matches, False otherwise
         
-    Example:
-        # During registration:
-        hashed = hash_auth_proof("correct_auth_proof")
-        # Store in database
-        
-        # During login:
-        verify_auth_proof("correct_auth_proof", hashed)  # Returns True
-        verify_auth_proof("wrong_auth_proof", hashed)    # Returns False
-    
     Security Note:
         This is constant-time comparison (resistant to timing attacks).
-        Passlib handles this automatically.
+        Passlib handles this automatically with argon2.
     """
     return pwd_context.verify(auth_proof_b64, hashed_auth_proof)
 

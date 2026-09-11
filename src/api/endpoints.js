@@ -7,10 +7,12 @@
  */
 export const ENDPOINTS = {
   auth: {
-    register: '/auth/register', // TODO: confirm path + payload shape with backend team
+    register: '/auth/register',
+    fetchSalt: '/auth/fetch-salt',
     login: '/auth/login',
     refresh: '/auth/refresh',
     logout: '/auth/logout',
+    lookupPublicKey: '/auth/lookup-public-key',
     me: '/auth/me',
   },
   files: {
@@ -27,3 +29,4 @@ export const ENDPOINTS = {
     lookupUser: '/users/lookup', // e.g. by email, to fetch a recipient's public key
   },
 }
+
