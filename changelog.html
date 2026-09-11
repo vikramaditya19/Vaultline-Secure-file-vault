@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaultline - Changelog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .meta {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        h2 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border-left: 4px solid #667eea;
+            padding-left: 12px;
+        }
+        
+        h2:first-of-type {
+            margin-top: 0;
+        }
+        
+        ul {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+        
+        li strong {
+            color: #333;
+        }
+        
+        .commit-details {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 6px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .hash {
+            font-family: 'Courier New', monospace;
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        
+        .empty {
+            color: #999;
+            font-style: italic;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .header-icon {
+            display: inline-block;
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><span class="header-icon">📚</span>Vaultline Changelog</h1>
+        <div class="meta" id="meta">Loading...</div>
+        <div id="content">Loading changelog...</div>
+    </div>
+
+    <script>
+        // Convert markdown to HTML
+        function markdownToHtml(markdown) {
+            let html = markdown;
+            
+            // Headers
+            html = html.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
+            
+            // Bold
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Code
+            html = html.replace(/`(.*?)`/g, '<code class="hash">$1</code>');
+            
+            // Line breaks for list items
+            html = html.replace(/^- (.*?)$/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*?<\/li>)/s, '<ul>$1</ul>');
+            
+            // Indented items (sub-details)
+            html = html.replace(/^  - (.*?)$/gm, '<div class="commit-details">$1</div>');
+            
+            // Paragraphs
+            html = html.replace(/\n\n/g, '</p><p>');
+            html = '<p>' + html + '</p>';
+            
+            // Clean up extra tags
+            html = html.replace(/<p><ul>/g, '<ul>');
+            html = html.replace(/<\/ul><\/p>/g, '</ul>');
+            html = html.replace(/<p><h/g, '<h');
+            html = html.replace(/<\/h\d><\/p>/g, '</h$1>');
+            
+            return html;
+        }
+
+        // Fetch and display changelog
+        fetch('CHANGELOG.md')
+            .then(response => response.text())
+            .then(markdown => {
+                const lines = markdown.split('\n');
+                let html = '';
+                let inList = false;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    
+                    if (line.startsWith('# ')) {
+                        html += `<h1>${line.substring(2)}</h1>`;
+                    } else if (line.startsWith('## ')) {
+                        if (inList) html += '</ul>';
+                        inList = false;
+                        html += `<h2>${line.substring(3)}</h2>`;
+                    } else if (line.startsWith('- ')) {
+                        if (!inList) {
+                            html += '<ul>';
+                            inList = true;
+                        }
+                        html += `<li>${line.substring(2)}</li>`;
+                    } else if (line.startsWith('  - ')) {
+                        html += `<div class="commit-details">${line.substring(4)}</div>`;
+                    } else if (line.trim() === '_' + 'Total commits: ' || line.includes('Total commits')) {
+                        document.getElementById('meta').innerHTML = `<strong>${line.replace(/_/g, '')}</strong> | View your project's git history organized by change type.`;
+                    } else if (line.includes('Generated on')) {
+                        document.getElementById('meta').innerHTML += ` | <strong>${line.replace('Generated on ', '')}</strong>`;
+                    } else if (line.trim()) {
+                        if (inList) {
+                            html += '</ul>';
+                            inList = false;
+                        }
+                        if (line.trim()) html += `<p>${line}</p>`;
+                    }
+                }
+                
+                if (inList) html += '</ul>';
+                document.getElementById('content').innerHTML = html || '<div class="empty">No changelog available yet. Run: npm run changelog</div>';
+            })
+            .catch(error => {
+                document.getElementById('content').innerHTML = `
+                    <div class="empty">
+                        <strong>Error loading changelog:</strong> ${error.message}
+                        <br><br>Make sure you've run: <code>npm run changelog</code>
+                    </div>
+                `;
+            });
+    </script>
+</body>
+</html>

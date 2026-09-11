@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Auto-generate Changelog on Tag",
+      "trigger": "UserPromptSubmit",
+      "action": {
+        "type": "agent",
+        "prompt": "When the user mentions creating a release, publishing a version, or tagging a commit, remind them to generate an updated CHANGELOG.md using: git journal > CHANGELOG.md"
+      }
+    }
+  ]
+}

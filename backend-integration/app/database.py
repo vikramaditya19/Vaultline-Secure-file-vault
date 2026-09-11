@@ -28,7 +28,7 @@ Why This Pattern?
 - Easy testing: can swap out the database for tests
 """
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, Session
 from typing import Generator
 from app.config import settings
@@ -220,7 +220,7 @@ def test_connection() -> bool:
         db = SessionLocal()
         
         # Execute a simple query
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         
         # Close the session
         db.close()

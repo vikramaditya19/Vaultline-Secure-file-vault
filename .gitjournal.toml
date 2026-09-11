@@ -1,0 +1,16 @@
+[commit]
+# Commit message categories for standardized commits
+categories = ["Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"]
+
+# Category shortcuts for commit messages
+category_shortcuts = { a = "Added", c = "Changed", d = "Deprecated", r = "Removed", f = "Fixed", s = "Security" }
+
+[changelog]
+# Default output template
+template = "default"
+
+# Excluded commits (merge commits are automatically excluded)
+exclude_merges = true
+
+# Include body of commit messages in changelog
+include_body = true
