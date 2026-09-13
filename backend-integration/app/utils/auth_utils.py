@@ -6,15 +6,15 @@ Authentication utilities for password hashing and verification.
 Security Architecture:
 ======================
 The frontend does PBKDF2 (600k iterations) to derive authProofB64.
-We hash that AGAIN with bcrypt before storing.
+We hash that AGAIN with Argon2 before storing.
 
 Why Double Hashing?
 ===================
 1. Client-side PBKDF2: Ensures password never sent over network
-2. Server-side bcrypt: Protects against database compromise
+2. Server-side Argon2: Protects against database compromise
 
 Even if attacker gets database access:
-- They see bcrypt(authProof), NOT authProof itself
+- They see Argon2(authProof), NOT authProof itself
 - They can't use it to decrypt files (need the actual authProof)
 - They can't derive wrapKey (it was derived client-side, never sent)
 
@@ -189,9 +189,9 @@ def hash_comparison_demo():
     print(f"   authProofB64 = {simulated_auth_proof}")
     print("   (This is sent to server)\n")
     
-    # Server-side bcrypt
+    # Server-side Argon2
     hashed = hash_auth_proof(simulated_auth_proof)
-    print(f"3. Server does bcrypt (12 rounds):")
+    print("3. Server applies Argon2:")
     print(f"   hashed_auth_proof = {hashed}")
     print("   (This is stored in database)\n")
     

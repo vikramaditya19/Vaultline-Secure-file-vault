@@ -8,18 +8,18 @@ Key Principles:
 ===============
 1. Request schemas: What the frontend SENDS
 2. Response schemas: What the backend RETURNS
-3. Field names MUST match what frontend expects (check mockAuthService.js)
+3. Field names match the real frontend service contract
 4. All crypto fields use base64 encoding for JSON transport
 
 Security Note:
 ==============
 - We NEVER receive the raw password from the frontend
 - We receive authProofB64 (already hashed client-side via PBKDF2)
-- We hash it AGAIN with bcrypt before storing
+- We hash it AGAIN with Argon2 before storing
 - This dual-hashing ensures server can't decrypt files even with DB access
 """
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from typing import Optional
 
 
@@ -33,8 +33,7 @@ class UserPublic(BaseModel):
     id: str = Field(..., description="Unique user identifier (UUID)")
     email: str = Field(..., description="User's email address")
     
-    class Config:
-        from_attributes = True  # Allow creating from SQLAlchemy models
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ==================== REGISTER ENDPOINT ====================
@@ -50,7 +49,7 @@ class RegisterRequest(BaseModel):
     4. Frontend wraps private key with wrapKey (derived from password)
     5. Frontend sends this request (NEVER the raw password!)
     """
-    email: EmailStr = Field(..., description="User's email address", example="user@example.com")
+    email: EmailStr = Field(..., description="User's email address", json_schema_extra={"example": "user@example.com"})
     authProofB64: str = Field(
         ..., 
         description="Base64-encoded auth proof from PBKDF2 (client-side)",
@@ -65,6 +64,11 @@ class RegisterRequest(BaseModel):
         ..., 
         description="Base64-encoded wrapped (encrypted) private key",
         min_length=100
+    )
+    saltB64: str = Field(
+        ...,
+        description="The exact client-generated salt used for key derivation",
+        min_length=16,
     )
 
 
@@ -186,5 +190,5 @@ class TokenData(BaseModel):
 
 class ErrorResponse(BaseModel):
     """Standard error response format."""
-    detail: str = Field(..., description="Error message", example="User not found")
-    status_code: int = Field(..., description="HTTP status code", example=404)
+    detail: str = Field(..., description="Error message", json_schema_extra={"example": "User not found"})
+    status_code: int = Field(..., description="HTTP status code", json_schema_extra={"example": 404})

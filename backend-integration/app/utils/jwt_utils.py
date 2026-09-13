@@ -32,7 +32,7 @@ Security:
 """
 
 from jose import JWTError, jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from app.config import settings
 from app.schemas.auth import TokenData
@@ -87,10 +87,10 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     
     # Calculate expiration time
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
         # Default: from config (usually 24 hours)
-        expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     
     # Add expiration to payload
     to_encode.update({"exp": expire})
@@ -280,7 +280,7 @@ def is_token_expired(token: str) -> bool:
         exp = payload.get("exp")
         if exp is None:
             return True
-        return datetime.fromtimestamp(exp) < datetime.utcnow()
+        return datetime.fromtimestamp(exp, timezone.utc) < datetime.now(timezone.utc)
     except Exception:
         return True
 

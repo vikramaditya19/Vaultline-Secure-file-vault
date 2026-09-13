@@ -6,16 +6,16 @@
   justify-content: space-between;
   padding: 0 var(--space-6);
   border-bottom: 1px solid var(--border-subtle);
-  background: var(--bg-surface-1);
+  background: rgba(245,240,234,.84);
+  backdrop-filter: blur(20px);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
 .navbar__title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--accent-primary);
+  font: 28px var(--font-serif);
+  color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 
@@ -34,14 +34,20 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent-primary) 0%, #c09060 100%);
-  color: #1a1914;
+  background: var(--accent-secondary-dim);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.95rem;
   font-weight: 700;
   box-shadow: 0 2px 4px rgba(212, 165, 116, 0.15);
+}
+
+@media (max-width: 760px) {
+  .navbar { position: static; padding: 0 16px; }
+  .navbar__email { display: none; }
+  .navbar__avatar { width: 34px; height: 34px; }
 }
 
 .navbar__logout {

@@ -64,9 +64,8 @@ export function ShareDialog({ file, onShared }) {
       const wrappedKeyB64 = await wrapFileKey(dek, recipientPublicKey)
 
       await sharingService.shareFile({
-        ownerId: user.id,
         fileId: file.id,
-        recipientUserId,
+        recipientEmail: email.trim(),
         wrappedKeyB64,
       })
 
@@ -83,7 +82,7 @@ export function ShareDialog({ file, onShared }) {
 
   async function handleRevoke(recipient) {
     try {
-      await sharingService.revokeShare({ ownerId: user.id, fileId: file.id, recipientUserId: recipient.userId })
+      await sharingService.revokeShare({ fileId: file.id, recipientEmail: recipient.email })
       setShares((current) => current.filter((s) => s.userId !== recipient.userId))
       toast.info(`Revoked access for ${recipient.email}.`)
     } catch (err) {

@@ -2,7 +2,7 @@
 models.py
 
 SQLAlchemy ORM models that define our database schema.
-Each class becomes a table in PostgreSQL.
+Each class becomes a table in the configured SQL database.
 
 DATABASE SCHEMA OVERVIEW:
 ========================
@@ -11,7 +11,7 @@ Users Table:
 - Stores user accounts with authentication credentials
 - Contains cryptographic keys (public key, wrapped private key)
 - salt: used for PBKDF2 password derivation (client-side)
-- hashed_auth_proof: bcrypt hash of the authProof (server-side verification)
+- hashed_auth_proof: Argon2 hash of the authProof (server-side verification)
 
 Files Table:
 - Stores encrypted file metadata (NOT the plaintext!)
@@ -28,7 +28,7 @@ Shares Table:
 
 from sqlalchemy import Column, String, Integer, LargeBinary, DateTime, ForeignKey, Text, BigInteger
 from sqlalchemy.orm import declarative_base, relationship
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
 
 
@@ -42,6 +42,10 @@ def generate_uuid() -> str:
     return str(uuid.uuid4())
 
 
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
 class User(Base):
     """
     User Model - Stores user accounts and cryptographic keys.
@@ -52,8 +56,8 @@ class User(Base):
        - authProof: sent to server, proves user knows password
        - wrapKey: NEVER sent to server, used to encrypt private key
     
-    2. Server receives authProof and hashes it AGAIN with bcrypt
-       - Double hashing: client does PBKDF2, server does bcrypt
+    2. Server receives authProof and hashes it AGAIN with Argon2
+       - Layered hashing: client does PBKDF2, server does Argon2
        - Even if database is compromised, attacker can't decrypt files
     
     3. User has RSA keypair:
@@ -71,7 +75,7 @@ class User(Base):
     # Authentication fields
     email = Column(String(255), unique=True, nullable=False, index=True)
     # NOTE: We do NOT store the plain password!
-    # We store bcrypt(authProof), where authProof = PBKDF2(password, salt)
+    # We store Argon2(authProof), where authProof derives from PBKDF2 + HKDF.
     hashed_auth_proof = Column(String(255), nullable=False)
     
     # Cryptographic fields
@@ -87,8 +91,8 @@ class User(Base):
     wrapped_private_key = Column(Text, nullable=False)
     
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
     
     # Relationships
     # One user can own many files
@@ -153,8 +157,8 @@ class File(Base):
     size_bytes = Column(BigInteger, nullable=False)
     
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
+    updated_at = Column(DateTime(timezone=True), default=utc_now, onupdate=utc_now, nullable=False)
     
     # Relationships
     owner = relationship("User", back_populates="owned_files")
@@ -202,7 +206,7 @@ class Share(Base):
     wrapped_key_for_recipient = Column(Text, nullable=False)
     
     # Timestamp
-    shared_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    shared_at = Column(DateTime(timezone=True), default=utc_now, nullable=False)
     
     # Relationships
     file = relationship("File", back_populates="shares")

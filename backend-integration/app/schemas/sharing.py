@@ -55,7 +55,7 @@ class ShareFileRequest(BaseModel):
     recipientEmail: EmailStr = Field(
         ..., 
         description="Email of user to share with",
-        example="friend@example.com"
+        json_schema_extra={"example": "friend@example.com"}
     )
     wrappedKeyForRecipient: str = Field(
         ..., 

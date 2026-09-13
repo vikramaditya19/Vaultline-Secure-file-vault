@@ -15,6 +15,7 @@ import { FileDetailsPage } from './pages/FileDetailsPage'
 import { SharedPage } from './pages/SharedPage'
 import { SettingsPage } from './pages/SettingsPage'
 import { NotFoundPage } from './pages/NotFoundPage'
+import { ProductDemoPage } from './pages/ProductDemoPage'
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <AuthProvider>
             <Routes>
               <Route path="/" element={<LandingPage />} />
+              <Route path="/demo" element={<ProductDemoPage />} />
 
               <Route element={<AuthLayout />}>
                 <Route path="/login" element={<LoginPage />} />

@@ -15,7 +15,7 @@ Tables Created:
 Security Note:
 ==============
 All sensitive data in these tables is encrypted or hashed:
-- Passwords → bcrypt(PBKDF2(password))
+- Authentication proofs → Argon2(PBKDF2/HKDF-derived proof)
 - Private keys → AES-encrypted with user's wrapKey
 - File content → AES-256-GCM encrypted (stored on disk)
 - Filenames → Encrypted in metadata blob

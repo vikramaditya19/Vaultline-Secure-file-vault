@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { authService } from '../services'
-import { bufferToBase64, base64ToBuffer } from '../crypto/cryptoUtils'
+import { base64ToBuffer } from '../crypto/cryptoUtils'
 import './SettingsPage.css'
 
 async function fingerprintFromPublicKey(publicKeyB64) {

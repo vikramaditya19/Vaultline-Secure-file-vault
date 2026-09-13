@@ -3,7 +3,7 @@
  *
  * Turns a password into two DIFFERENT, cryptographically unrelated values:
  *
- *   authProof  -> sent to the backend, which hashes it again (bcrypt) and
+ *   authProof  -> sent to the backend, which hashes it again (Argon2) and
  *                 uses it purely to prove "this person knows the password".
  *   wrapKey    -> NEVER leaves the browser. Used only to encrypt
  *                 (wrap) the user's private key at rest.

@@ -158,6 +158,6 @@ class DecryptedMetadata(BaseModel):
     This is NOT sent over the wire - it's what the encrypted blob contains.
     Documented here for reference and type safety in client code.
     """
-    filename: str = Field(..., description="Original filename", example="document.pdf")
-    mimeType: str = Field(..., description="MIME type", example="application/pdf")
+    filename: str = Field(..., description="Original filename", json_schema_extra={"example": "document.pdf"})
+    mimeType: str = Field(..., description="MIME type", json_schema_extra={"example": "application/pdf"})
     sizeBytes: int = Field(..., description="Original file size", ge=0)

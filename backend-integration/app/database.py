@@ -36,19 +36,15 @@ from app.config import settings
 
 # ==================== ENGINE SETUP ====================
 
-# Create the database engine
-# This is the core connection to PostgreSQL
-engine = create_engine(
-    settings.DATABASE_URL,
-    
-    # Connection pool settings
-    pool_pre_ping=True,          # Verify connections before using them
-    pool_size=10,                 # Keep 10 connections open
-    max_overflow=20,              # Allow up to 20 additional connections if needed
-    
-    # Logging
-    echo=settings.DATABASE_ECHO,  # Log all SQL queries (for debugging)
-)
+# SQLite is the zero-setup demo default; PostgreSQL remains available through
+# DATABASE_URL. Pool-only options are invalid for SQLite's default pool.
+engine_options = {"pool_pre_ping": True, "echo": settings.DATABASE_ECHO}
+if settings.DATABASE_URL.startswith("sqlite"):
+    engine_options["connect_args"] = {"check_same_thread": False}
+else:
+    engine_options.update(pool_size=10, max_overflow=20)
+
+engine = create_engine(settings.DATABASE_URL, **engine_options)
 
 """
 What is pool_pre_ping?
@@ -154,7 +150,7 @@ def init_db() -> None:
     
     # Create all tables defined in models.py
     Base.metadata.create_all(bind=engine)
-    print("✅ Database tables created successfully")
+    print("Database tables created successfully")
 
 
 def drop_db() -> None:
@@ -170,7 +166,7 @@ def drop_db() -> None:
     
     # Drop all tables
     Base.metadata.drop_all(bind=engine)
-    print("🗑️ All database tables dropped")
+    print("All database tables dropped")
 
 
 # ==================== UTILITY FUNCTIONS ====================
@@ -228,7 +224,7 @@ def test_connection() -> bool:
         return True
         
     except Exception as e:
-        print(f"❌ Database connection failed: {e}")
+        print(f"Database connection failed: {e}")
         return False
 
 

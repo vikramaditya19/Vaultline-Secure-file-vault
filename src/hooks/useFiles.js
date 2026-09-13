@@ -36,7 +36,7 @@ export function useFiles() {
             const dek = await unwrapFileKey(raw.wrappedKeyB64, privateKey)
             const metadata = await decryptFileMetadata(raw.encryptedMetadataB64, dek)
             return { ...raw, metadata, decryptError: null }
-          } catch (err) {
+          } catch (_err) {
             return { ...raw, metadata: null, decryptError: 'Could not decrypt metadata.' }
           }
         })

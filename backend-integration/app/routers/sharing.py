@@ -49,6 +49,8 @@ from app.schemas.sharing import (
     ShareListItem,
     RevokeShareRequest,
     RevokeShareResponse,
+    SharedWithMeItem,
+    SharedWithMeResponse,
 )
 from app.utils.jwt_utils import get_current_user, TokenData
 
@@ -130,13 +132,15 @@ def share_file(
             detail="Only the file owner can share this file."
         )
     
-    # Find recipient by email
-    recipient = db.query(User).filter(User.email == body.recipientEmail).first()
+    recipient_email = str(body.recipientEmail).strip().lower()
+
+    # Account emails are normalized at registration; sharing accepts any case.
+    recipient = db.query(User).filter(User.email == recipient_email).first()
     
     if not recipient:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No user found with email: {body.recipientEmail}"
+            detail=f"No user found with email: {recipient_email}"
         )
     
     # Can't share with yourself (already have access as owner)
@@ -155,7 +159,7 @@ def share_file(
     if existing_share:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail=f"File is already shared with {body.recipientEmail}"
+            detail=f"File is already shared with {recipient_email}"
         )
     
     # Create new share
@@ -171,7 +175,7 @@ def share_file(
     
     return ShareFileResponse(
         success=True,
-        message=f"File shared successfully with {body.recipientEmail}",
+        message=f"File shared successfully with {recipient_email}",
         recipientId=recipient.id,
         sharedAt=new_share.shared_at
     )
@@ -179,7 +183,7 @@ def share_file(
 
 # ==================== LIST SHARES ENDPOINT ====================
 
-@router.get("/{file_id}", response_model=ListSharesResponse)
+@router.get("/file/{file_id}", response_model=ListSharesResponse)
 def list_shares(
     file_id: str,
     current_user: TokenData = Depends(get_current_user),
@@ -328,13 +332,15 @@ def revoke_share(
             detail="Only the file owner can revoke shares."
         )
     
-    # Find recipient
-    recipient = db.query(User).filter(User.email == body.recipientEmail).first()
+    recipient_email = str(body.recipientEmail).strip().lower()
+
+    # Match registration normalization so case variants revoke the same grant.
+    recipient = db.query(User).filter(User.email == recipient_email).first()
     
     if not recipient:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"No user found with email: {body.recipientEmail}"
+            detail=f"No user found with email: {recipient_email}"
         )
     
     # Can't revoke from yourself (you're the owner, not a recipient!)
@@ -353,7 +359,7 @@ def revoke_share(
     if not share:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"File is not shared with {body.recipientEmail}"
+            detail=f"File is not shared with {recipient_email}"
         )
     
     # Delete share
@@ -362,13 +368,13 @@ def revoke_share(
     
     return RevokeShareResponse(
         success=True,
-        message=f"Access revoked for {body.recipientEmail}"
+        message=f"Access revoked for {recipient_email}"
     )
 
 
 # ==================== SHARED WITH ME (BONUS) ====================
 
-@router.get("/shared-with-me", response_model=ListSharesResponse)
+@router.get("/shared-with-me", response_model=SharedWithMeResponse)
 def get_shared_with_me(
     current_user: TokenData = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -422,16 +428,17 @@ def get_shared_with_me(
         if not owner:
             continue  # Owner was deleted (shouldn't happen with FK constraints)
         
-        share_items.append(ShareListItem(
-            recipientId=user_id,
-            recipientEmail=current_user.email,
+        share_items.append(SharedWithMeItem(
+            fileId=file.id,
+            ownerId=owner.id,
+            ownerEmail=owner.email,
+            encryptedMetadataB64=file.encrypted_metadata,
+            wrappedKeyB64=share.wrapped_key_for_recipient,
+            sizeBytes=file.size_bytes,
             sharedAt=share.shared_at
         ))
-    
-    return ListSharesResponse(
-        fileId="",  # Multiple files
-        shares=share_items
-    )
+
+    return SharedWithMeResponse(files=share_items)
 
 
 # ==================== HELPER FUNCTIONS ====================

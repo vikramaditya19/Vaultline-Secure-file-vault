@@ -1,26 +1,20 @@
-/**
- * authService.js
- */
-import { mockAuthService } from './mock/mockAuthService'
+import { apiClient } from '../api/client'
+import { ENDPOINTS } from '../api/endpoints'
 
 export const authService = {
   async register(payload) {
-    return mockAuthService.register(payload)
+    return (await apiClient.post(ENDPOINTS.auth.register, payload)).data
   },
-
   async fetchSalt(payload) {
-    return mockAuthService.fetchSalt(payload)
+    return (await apiClient.post(ENDPOINTS.auth.fetchSalt, payload)).data
   },
-
   async login(payload) {
-    return mockAuthService.login(payload)
+    return (await apiClient.post(ENDPOINTS.auth.login, payload)).data
   },
-
   async logout() {
-    return mockAuthService.logout()
+    return (await apiClient.post(ENDPOINTS.auth.logout)).data
   },
-
   async lookupPublicKey(payload) {
-    return mockAuthService.lookupPublicKey(payload)
+    return (await apiClient.post(ENDPOINTS.auth.lookupPublicKey, payload)).data
   },
 }

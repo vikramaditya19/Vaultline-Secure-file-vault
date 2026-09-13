@@ -8,14 +8,19 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  background: var(--bg-base);
+  background: #f5f0ea;
 }
 
 .app-layout__content {
   flex: 1;
   overflow-y: auto;
-  padding: var(--space-7);
-  background: var(--bg-base);
+  padding: 42px;
+  background: #f5f0ea;
+}
+
+@media (max-width: 760px) {
+  .app-layout { display: block; height: auto; min-height: 100vh; }
+  .app-layout__content { padding: 24px 16px 100px; }
 }
 
 /* Scrollbar Styling */

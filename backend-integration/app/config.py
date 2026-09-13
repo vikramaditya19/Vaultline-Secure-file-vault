@@ -12,8 +12,13 @@ Why Pydantic Settings?
 - Clear documentation: all config in one place
 """
 
+from typing import Literal
+
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parents[1]
 
 
 class Settings(BaseSettings):
@@ -30,17 +35,19 @@ class Settings(BaseSettings):
     # PostgreSQL connection string
     # Format: postgresql://username:password@host:port/database_name
     # Example: postgresql://vaultuser:securepass@localhost:5432/vaultline_db
-    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/vaultline"
+    # SQLite keeps the classroom demo zero-setup. Production can override this
+    # with postgresql+psycopg://user:password@host/database.
+    DATABASE_URL: str = f"sqlite:///{(BASE_DIR / 'vaultline.db').as_posix()}"
     
     # Enable SQL query logging (set to False in production for performance)
-    DATABASE_ECHO: bool = True
+    DATABASE_ECHO: bool = False
     
     
     # ==================== JWT SETTINGS ====================
     
     # Secret key for signing JWT tokens - MUST be changed in production!
     # Generate a secure key with: openssl rand -hex 32
-    SECRET_KEY: str = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
+    SECRET_KEY: str = "vaultline-development-key-change-before-production"
     
     # Algorithm used to sign JWT tokens (HS256 = HMAC with SHA-256)
     ALGORITHM: str = "HS256"
@@ -53,7 +60,7 @@ class Settings(BaseSettings):
     
     # Directory where encrypted files will be stored
     # This stores the CIPHERTEXT only - server never sees plaintext
-    UPLOAD_DIR: Path = Path("uploads")
+    UPLOAD_DIR: Path = BASE_DIR / "uploads"
     
     # Maximum file size in bytes (100 MB)
     # Frontend encrypts files, so ciphertext is slightly larger than plaintext
@@ -87,19 +94,30 @@ class Settings(BaseSettings):
     API_VERSION: str = "1.0.0"
     
     # Debug mode (disable in production)
-    DEBUG: bool = True
+    DEBUG: bool = False
+
+    # Production startup refuses the shared development signing key.
+    ENVIRONMENT: Literal["development", "test", "production"] = "development"
     
     
     # Pydantic Settings configuration
     model_config = SettingsConfigDict(
         # Look for .env file in backend-integration/ directory
-        env_file="../.env",
+        env_file=BASE_DIR / ".env",
         env_file_encoding="utf-8",
         # Allow extra fields without validation errors
         extra="ignore",
         # Make settings case-insensitive
         case_sensitive=False,
     )
+
+    @model_validator(mode="after")
+    def validate_production_secret(self):
+        if self.ENVIRONMENT == "production" and self.SECRET_KEY == "vaultline-development-key-change-before-production":
+            raise ValueError("SECRET_KEY must be set to a unique value in production")
+        if self.ENVIRONMENT == "production" and len(self.SECRET_KEY) < 32:
+            raise ValueError("SECRET_KEY must contain at least 32 characters in production")
+        return self
 
 
 # ==================== SINGLETON INSTANCE ====================

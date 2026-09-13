@@ -1,186 +1,91 @@
-"""
-auth.py - Authentication Router (SIMPLIFIED)
+"""Persistent authentication routes for Vaultline."""
 
-Implements all authentication endpoints matching the mock service exactly:
-- POST /register: Create new user account
-- POST /fetch-salt: Get salt for login (step 1)
-- POST /login: Authenticate user (step 2)
-- POST /logout: Logout
-- POST /lookup-public-key: Get user's public key for sharing
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
 
-Security Model (SIMPLIFIED - IN-MEMORY FOR NOW):
-================================================
-For now: in-memory dict, authProofB64 direct comparison (no hashing)
-The client already sends authProofB64 (pre-hashed with PBKDF2 client-side)
-Server stores it as-is and compares directly
-
-Later: Can migrate to SQLite or Postgres with same logic
-"""
-
-from fastapi import APIRouter, HTTPException, status
+from app.database import get_db
+from app.models import User
 from app.schemas.auth import (
-    RegisterRequest,
-    RegisterResponse,
-    FetchSaltRequest,
-    FetchSaltResponse,
-    LoginRequest,
-    LoginResponse,
-    LogoutResponse,
-    LookupPublicKeyRequest,
-    LookupPublicKeyResponse,
-    UserPublic,
+    FetchSaltRequest, FetchSaltResponse, LoginRequest, LoginResponse,
+    LogoutResponse, LookupPublicKeyRequest, LookupPublicKeyResponse,
+    RegisterRequest, RegisterResponse, TokenData, UserPublic,
 )
-from app.utils.auth_utils import generate_salt
-import uuid
+from app.utils.auth_utils import hash_auth_proof, verify_auth_proof
+from app.utils.jwt_utils import create_access_token, get_current_user
+
+router = APIRouter(prefix="/auth", tags=["authentication"])
 
 
-# ==================== IN-MEMORY STORE ====================
-# Temporary in-memory store (matches mock service)
-# Key: email, Value: user dict with {id, email, salt, authProofB64, publicKeyB64, wrappedPrivateKeyB64}
-_users_db = {}
+def normalized_email(email: str) -> str:
+    return email.strip().lower()
 
 
-def _next_id(prefix: str) -> str:
-    """Generate unique ID"""
-    return f"{prefix}_{uuid.uuid4().hex[:12]}"
+def auth_response(user: User, response_type):
+    return response_type(
+        user=UserPublic(id=user.id, email=user.email),
+        token=create_access_token({"user_id": user.id, "email": user.email}),
+        wrappedPrivateKeyB64=user.wrapped_private_key,
+        salt=user.salt,
+    )
 
-
-# Create router with prefix and tags
-router = APIRouter(
-    prefix="/auth",
-    tags=["authentication"],
-)
-
-
-# ==================== REGISTER ENDPOINT ====================
 
 @router.post("/register", response_model=RegisterResponse, status_code=status.HTTP_201_CREATED)
-def register_user(body: RegisterRequest):
-    """
-    Register a new user account.
-    
-    Matches mock service behavior exactly.
-    Stores authProofB64 as-is (no hashing - client already did PBKDF2).
-    """
-    
-    # Check if email already exists
-    if body.email in _users_db:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="An account with this email already exists."
-        )
-    
-    # Generate salt (for client to re-derive authProof during login)
-    salt = generate_salt()
-    
-    # Create user
-    user_id = _next_id("user")
-    _users_db[body.email] = {
-        "id": user_id,
-        "email": body.email,
-        "salt": salt,
-        "authProofB64": body.authProofB64,
-        "publicKeyB64": body.publicKeyB64,
-        "wrappedPrivateKeyB64": body.wrappedPrivateKeyB64,
-    }
-    
-    # Return response matching mock service
-    return RegisterResponse(
-        user=UserPublic(id=user_id, email=body.email),
-        token=f"mock.{user_id}.token",
-        wrappedPrivateKeyB64=body.wrappedPrivateKeyB64,
-        salt=salt,
+def register_user(body: RegisterRequest, db: Session = Depends(get_db)):
+    email = normalized_email(body.email)
+    if db.query(User).filter(User.email == email).first():
+        raise HTTPException(status_code=409, detail="An account with this email already exists.")
+    user = User(
+        email=email,
+        hashed_auth_proof=hash_auth_proof(body.authProofB64),
+        salt=body.saltB64,
+        public_key=body.publicKeyB64,
+        wrapped_private_key=body.wrappedPrivateKeyB64,
     )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return auth_response(user, RegisterResponse)
 
-
-# ==================== FETCH SALT ENDPOINT ====================
 
 @router.post("/fetch-salt", response_model=FetchSaltResponse)
-def fetch_salt(body: FetchSaltRequest):
-    """
-    Fetch salt for a user (Login Step 1).
-    
-    Matches mock service behavior exactly.
-    """
-    
-    if body.email not in _users_db:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="No account found for this email."
-        )
-    
-    user = _users_db[body.email]
-    return FetchSaltResponse(salt=user["salt"])
+def fetch_salt(body: FetchSaltRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == normalized_email(body.email)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="No account found for this email.")
+    return FetchSaltResponse(salt=user.salt)
 
-
-# ==================== LOGIN ENDPOINT ====================
 
 @router.post("/login", response_model=LoginResponse)
-def login_user(body: LoginRequest):
-    """
-    Authenticate user and issue token (Login Step 2).
-    
-    Matches mock service behavior exactly.
-    Direct authProofB64 comparison (no hashing).
-    """
-    
-    if body.email not in _users_db:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password."
-        )
-    
-    user = _users_db[body.email]
-    
-    # Direct comparison (authProofB64 is already PBKDF2-hashed client-side)
-    if user["authProofB64"] != body.authProofB64:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password."
-        )
-    
-    # Return response matching mock service
-    return LoginResponse(
-        user=UserPublic(id=user["id"], email=user["email"]),
-        token=f"mock.{user['id']}.token",
-        wrappedPrivateKeyB64=user["wrappedPrivateKeyB64"],
-        salt=user["salt"],
-    )
+def login_user(body: LoginRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == normalized_email(body.email)).first()
+    if not user or not verify_auth_proof(body.authProofB64, user.hashed_auth_proof):
+        raise HTTPException(status_code=401, detail="Incorrect email or password.")
+    return auth_response(user, LoginResponse)
 
-
-# ==================== LOGOUT ENDPOINT ====================
 
 @router.post("/logout", response_model=LogoutResponse)
-def logout_user():
-    """
-    Logout endpoint.
-    
-    For now, just returns success (in-memory, no session state).
-    Later: can invalidate JWT tokens.
-    """
+def logout_user(current_user: TokenData = Depends(get_current_user)):
     return LogoutResponse(success=True)
 
 
-# ==================== LOOKUP PUBLIC KEY ENDPOINT ====================
-
 @router.post("/lookup-public-key", response_model=LookupPublicKeyResponse)
-def lookup_public_key(body: LookupPublicKeyRequest):
-    """
-    Lookup a user's public key by email.
-    
-    Used when sharing files - need recipient's public key to wrap the DEK.
-    Matches mock service behavior exactly.
-    """
-    
-    if body.email not in _users_db:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="No user found with that email."
-        )
-    
-    user = _users_db[body.email]
-    return LookupPublicKeyResponse(
-        userId=user["id"],
-        email=user["email"],
-        publicKeyB64=user["publicKeyB64"],
-    )
+def lookup_public_key(
+    body: LookupPublicKeyRequest,
+    current_user: TokenData = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    user = db.query(User).filter(User.email == normalized_email(body.email)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="No user found with that email.")
+    return LookupPublicKeyResponse(userId=user.id, email=user.email, publicKeyB64=user.public_key)
+
+
+@router.get("/me", response_model=UserPublic)
+def current_user_profile(
+    current_user: TokenData = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    user = db.query(User).filter(User.id == current_user.user_id).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="User no longer exists.")
+    return UserPublic(id=user.id, email=user.email)

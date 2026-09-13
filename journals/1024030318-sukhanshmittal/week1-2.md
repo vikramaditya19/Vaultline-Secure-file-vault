@@ -348,7 +348,7 @@ npm run dev
 
 ## Resources Created
 
-1. **DEBUG_LOG.md** - Initial issue documentation
+1. **docs/SECURITY.md** - Canonical security and credential-incident documentation
 2. **TROUBLESHOOTING_LOG.md** - This file, comprehensive issue log
 3. **create_db.py** - Programmatic database creation
 4. **init_db.py** - Table initialization script

@@ -1,58 +1,43 @@
 :root {
-  /* Warm Neutral Theme - Inspired by Gandalf Design System */
-  /* Security-focused with warm restraint, not decorative */
-  
-  /* Dark "Wizard Gate" Theme - Warm Slate Neutrals */
-  --bg-base: #17161a;
-  --bg-surface-1: #24232b;
-  --bg-surface-2: #2d2c34;
-  --bg-surface-3: #36353f;
-  --bg-overlay: rgba(23, 22, 26, 0.85);
+  --bg-base: #f7f3ed;
+  --bg-surface-1: #fffdf9;
+  --bg-surface-2: #f2ebe3;
+  --bg-surface-3: #e7e3d6;
+  --bg-overlay: rgba(41, 37, 32, 0.52);
 
-  /* Text - Warm ink for readability */
-  --text-primary: #f4f2ed;
-  --text-secondary: #b8b5ae;
-  --text-muted: #8a8781;
+  --text-primary: #292520;
+  --text-secondary: #6e675f;
+  --text-muted: #968d83;
+  --border-subtle: #e8e0d7;
+  --border-default: #d9cfc5;
+  --border-strong: #bdb1a6;
 
-  /* Borders - Warm gray with subtle presence */
-  --border-subtle: #36353f;
-  --border-default: #45444d;
-  --border-strong: #54535c;
+  --accent-primary: #d47d67;
+  --accent-primary-dark: #b9604d;
+  --accent-primary-light: #e9a18e;
+  --accent-primary-dim: #f5ddd4;
+  --accent-secondary: #8c9273;
+  --accent-secondary-light: #afb398;
+  --accent-secondary-dim: #e1e2d4;
 
-  /* Primary Accent - Warm Gold (Restraint, not decoration) */
-  --accent-primary: #d4a574;
-  --accent-primary-dark: #b8924a;
-  --accent-primary-light: #e5b894;
-  --accent-primary-dim: #6b5a3e;
+  --success: #607b5d;
+  --success-dim: #e0eadc;
+  --danger: #b85043;
+  --danger-dim: #f5deda;
+  --warning: #ae7c3f;
+  --warning-dim: #f3e7d1;
+  --info: #687d8c;
+  --info-dim: #dce7ec;
 
-  /* Secondary Accent - Muted Slate (Technical clarity) */
-  --accent-secondary: #7a8a9a;
-  --accent-secondary-light: #a0aeba;
-  --accent-secondary-dim: #4a5568;
+  --font-sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: Iowan Old Style, Baskerville, "Times New Roman", serif;
+  --font-mono: "SFMono-Regular", Consolas, monospace;
 
-  /* Semantic Colors - Muted for security context */
-  --success: #5fb878;
-  --success-dim: #2d5a3d;
-  --danger: #d97373;
-  --danger-dim: #6b3b3b;
-  --warning: #d4a574;
-  --warning-dim: #6b5a3e;
-  --info: #7a9fb8;
-  --info-dim: #3d4f5f;
-
-  /* Type */
-  --font-sans: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-serif: 'Crimson Text', 'Georgia', serif;
-  --font-mono: 'Menlo', 'Monaco', 'SFMono-Regular', Consolas, monospace;
-
-  /* Border Radius - Subtle, not playful */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 9999px;
-
-  /* Spacing - Compact hierarchy */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-full: 999px;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -60,30 +45,22 @@
   --space-5: 24px;
   --space-6: 32px;
   --space-7: 48px;
-  --space-8: 64px;
+  --space-8: 72px;
 
-  /* Shadows - Subtle depth, not dramatic */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.12);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.16), 0 1px 2px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.20);
-  --shadow-xl: 0 8px 16px rgba(0, 0, 0, 0.25);
-  --shadow-panel: 0 4px 12px rgba(0, 0, 0, 0.18);
-  
-  /* Warm parchment hover state */
-  --glass-bg: rgba(45, 44, 52, 0.6);
-  --glass-border: rgba(69, 68, 77, 0.25);
+  --shadow-sm: 0 1px 2px rgba(55, 42, 31, 0.05);
+  --shadow-md: 0 10px 30px rgba(70, 50, 35, 0.08);
+  --shadow-lg: 0 20px 55px rgba(70, 50, 35, 0.11);
+  --shadow-xl: 0 30px 80px rgba(70, 50, 35, 0.14);
+  --shadow-panel: 0 18px 60px rgba(70, 50, 35, 0.1);
+  --glass-bg: rgba(255, 253, 249, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.68);
 
-  /* Layout */
-  --sidebar-width: 260px;
-  --topbar-height: 64px;
-
-  /* Transitions - Purposeful, not playful */
-  --transition-fast: 120ms ease-out;
-  --transition-base: 180ms ease-out;
-  --transition-slow: 240ms ease-out;
-
-  /* Gradients - Warm, restrained */
-  --gradient-primary: linear-gradient(135deg, #d4a574 0%, #a0aeba 100%);
-  --gradient-accent: linear-gradient(135deg, #a0aeba 0%, #7a8a9a 100%);
-  --gradient-warm: linear-gradient(135deg, #d4a574 0%, #d97373 100%);
+  --sidebar-width: 250px;
+  --topbar-height: 76px;
+  --transition-fast: 140ms ease;
+  --transition-base: 220ms cubic-bezier(.2,.8,.2,1);
+  --transition-slow: 520ms cubic-bezier(.2,.8,.2,1);
+  --gradient-primary: linear-gradient(135deg, #de8b72 0%, #c96d59 100%);
+  --gradient-accent: linear-gradient(135deg, #9da283 0%, #73795d 100%);
+  --gradient-warm: linear-gradient(135deg, #f5ddd4 0%, #e7e3d6 100%);
 }
