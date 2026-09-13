@@ -38,26 +38,27 @@ File Download Flow:
 5. Client decrypts file content
 """
 
-from fastapi import APIRouter, HTTPException, status, Depends, UploadFile, File as FastAPIFile, Form
-from fastapi.responses import StreamingResponse
-from sqlalchemy.orm import Session
-from typing import List
-import aiofiles
 import os
 from datetime import datetime
+from typing import List
 
+import aiofiles
+from fastapi import APIRouter, Depends, Form, HTTPException, UploadFile, status
+from fastapi import File as FastAPIFile
+from fastapi.responses import StreamingResponse
+from sqlalchemy.orm import Session
+
+from app.config import get_upload_path, settings
 from app.database import get_db
-from app.models import User, File, Share
+from app.models import File, Share, User
 from app.schemas.files import (
-    FileUploadResponse,
-    FileListResponse,
-    FileListItem,
-    FileDetailResponse,
     FileDeleteResponse,
+    FileDetailResponse,
+    FileListItem,
+    FileListResponse,
+    FileUploadResponse,
 )
-from app.utils.jwt_utils import get_current_user, TokenData
-from app.config import settings, get_upload_path
-
+from app.utils.jwt_utils import TokenData, get_current_user
 
 # Create router
 router = APIRouter(

@@ -1,7 +1,7 @@
 """Vaultline FastAPI application."""
 
-from contextlib import asynccontextmanager
 import time
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError

@@ -7,9 +7,9 @@ Usage:
     python init_db.py
 """
 
-from app.database import init_db, test_connection
 # Import all models to register them with SQLAlchemy
 from app import models
+from app.database import init_db, test_connection
 
 if __name__ == "__main__":
     print("Testing database connection...")

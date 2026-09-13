@@ -22,10 +22,11 @@ This is similar to Bitwarden's architecture:
 https://bitwarden.com/help/bitwarden-security-white-paper/
 """
 
-from passlib.context import CryptContext
-from app.config import settings
 import secrets
 
+from passlib.context import CryptContext
+
+from app.config import settings
 
 # ==================== PASSWORD CONTEXT ====================
 

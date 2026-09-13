@@ -31,14 +31,15 @@ Security:
 - Use HTTPS in production (prevents token theft)
 """
 
-from jose import JWTError, jwt
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError, jwt
+
 from app.config import settings
 from app.schemas.auth import TokenData
-from fastapi import HTTPException, status, Depends
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-
 
 # ==================== SECURITY SCHEME ====================
 

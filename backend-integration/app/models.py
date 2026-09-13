@@ -26,11 +26,20 @@ Shares Table:
 - Allows file sharing without re-encrypting the file content
 """
 
-from sqlalchemy import Column, String, Integer, LargeBinary, DateTime, ForeignKey, Text, BigInteger
-from sqlalchemy.orm import declarative_base, relationship
-from datetime import datetime, timezone
 import uuid
+from datetime import datetime, timezone
 
+from sqlalchemy import (
+    BigInteger,
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    LargeBinary,
+    String,
+    Text,
+)
+from sqlalchemy.orm import declarative_base, relationship
 
 # Base class for all models
 # All tables inherit from this

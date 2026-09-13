@@ -6,9 +6,17 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User
 from app.schemas.auth import (
-    FetchSaltRequest, FetchSaltResponse, LoginRequest, LoginResponse,
-    LogoutResponse, LookupPublicKeyRequest, LookupPublicKeyResponse,
-    RegisterRequest, RegisterResponse, TokenData, UserPublic,
+    FetchSaltRequest,
+    FetchSaltResponse,
+    LoginRequest,
+    LoginResponse,
+    LogoutResponse,
+    LookupPublicKeyRequest,
+    LookupPublicKeyResponse,
+    RegisterRequest,
+    RegisterResponse,
+    TokenData,
+    UserPublic,
 )
 from app.utils.auth_utils import hash_auth_proof, verify_auth_proof
 from app.utils.jwt_utils import create_access_token, get_current_user

@@ -28,11 +28,12 @@ Why This Pattern?
 - Easy testing: can swap out the database for tests
 """
 
-from sqlalchemy import create_engine, text
-from sqlalchemy.orm import sessionmaker, Session
 from typing import Generator
-from app.config import settings
 
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import Session, sessionmaker
+
+from app.config import settings
 
 # ==================== ENGINE SETUP ====================
 

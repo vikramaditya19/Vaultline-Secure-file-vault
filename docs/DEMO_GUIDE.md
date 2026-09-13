@@ -1,7 +1,7 @@
 # Vaultline Presentation & Demonstration Guide
 
 ```text
-  ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗██╗     ██╗███╗   ██╗███████╗
+  ██╗   ██╗ █████╗ ██╗   ██╗██╗  ████████╗██╗     ██╗███╗   ███╗███████╗
   ██║   ██║██╔══██╗██║   ██║██║  ╚══██╔══╝██║     ██║████╗  ██║██╔════╝
   ██║   ██║███████║██║   ██║██║     ██║   ██║     ██║██╔██╗ ██║█████╗  
   ╚██╗ ██╔╝██╔══██║██║   ██║██║     ██║   ██║     ██║██║╚██╗██║██╔══╝  
@@ -18,42 +18,49 @@ Vaultline offers two distinct demonstration tracks suited for different evaluati
 
 | Track | Target Route | Time Required | Setup Needed | Purpose |
 |---|---|:---:|---|---|
-| **Track A: In-Website Guided Demo** | `/demo` | ~3 Minutes | Zero setup (Frontend only) | Rapid conceptual review, cryptographic UI walkthrough |
+| **Track A: In-Website Guided Demo & Testbench** | `/demo` | ~3–4 Minutes | Zero setup (Frontend only) | Rapid conceptual review, real Web Crypto execution, live tamper sandbox, F1 telemetry walkthrough |
 | **Track B: Full End-to-End Live Workflow** | Live Auth App | ~7 Minutes | Frontend (`:5173`) + Backend (`:8000`) | Comprehensive technical evaluation, persistence, multi-user sharing & revocation |
 
 ---
 
-## 2. Track A: In-Website Guided Tour (3-Minute Script)
+## 2. Track A: In-Website Guided Demo & Testbench (3–4 Minute Script)
 
-Direct URL: `http://localhost:5173/demo` (or click **"Start guided demo"** on the landing page).
+Direct URL: `http://localhost:5173/demo` (or click **"Start Guided Demo"** on the landing page).
+
+Persona: **Max Verstappen** (`max.verstappen@redbullracing.com` · Oracle Red Bull Racing)  
+Dataset: **RB20 Powertrain & Telemetry Envelopes** (with custom file upload support).
 
 ```text
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                          INTERACTIVE 5-CHAPTER WALKTHROUGH                             │
-│                                                                                        │
-│   [1. OVERVIEW]  ──►  [2. ENCRYPT]  ──►  [3. SHARE]  ──►  [4. OPEN]  ──►  [5. PROOF]  │
-└────────────────────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                               INTERACTIVE 6-CHAPTER CRYPTOGRAPHIC TESTBENCH                            │
+│                                                                                                        │
+│  [0. HKDF SPLIT] ──► [1. WEBCRYPTO] ──► [2. STORAGE] ──► [3. ZERO-COPY] ──► [4. TAMPER] ──► [5. AUDIT] │
+└────────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Chapter 1: Unlocked Workspace Overview
-- **Action:** Open `/demo`. Point out the active vault dashboard with sample encrypted files.
-- **Talking Point:** *"Notice how filenames are displayed in the vault. They are readable here solely because browser-side Web Crypto decrypted the metadata in memory. To the server and database, this file is an opaque identifier with an encrypted metadata blob."*
+### Chapter 0: Master Key Derivation & Domain Separation
+- **Action:** Adjust the PBKDF2 iteration slider (default 600,000) and change the raw password. Observe the live key derivation hierarchy tree.
+- **Talking Point:** *"Vaultline enforces dual-branch domain separation via RFC 5869 HKDF. Notice Branch A outputs `authProof` (sent to the server to be hashed with Argon2id), while Branch B produces `wrapKey` in volatile memory. Because HKDF is one-way, even an adversary with full database access cannot deduce `wrapKey`."*
 
-### Chapter 2: Local Encryption Simulation
-- **Action:** Click **"Run encryption demo"**. Watch the animated encryption progress bar.
-- **Talking Point:** *"Every file generates a fresh random 256-bit AES Data Encryption Key (DEK). The content and metadata are encrypted with distinct 96-bit random IVs. The DEK is then wrapped using the user's RSA-OAEP public key."*
+### Chapter 1: Real-Time Web Crypto Encryption Pipeline
+- **Action:** Select a preset telemetry document (e.g., `telemetry_rb20_f92c10.json`) or click **"Drop any document or click to browse"** to upload any custom local file. Click **"Execute Real Web Crypto Encryption"**.
+- **Talking Point:** *"This is not a mock simulation. The browser executes W3C `window.crypto.subtle` directly in RAM. It generates a fresh 256-bit AES-GCM DEK, encrypts payload bytes with a 96-bit Content IV, encrypts metadata with a distinct 96-bit Meta IV, and wraps the DEK under Max's RSA-3072 public key. Inspect the Wire Inspector tabs to see the raw key envelope, ciphertext hex bytes, and encrypted metadata."*
 
-### Chapter 3: Cryptographic Sharing
-- **Action:** Select recipient `maya@vaultline.internal` and click **"Complete share"**.
-- **Talking Point:** *"Notice what happens during sharing: we do NOT re-encrypt the file or send Maya our password. The browser unwraps the file DEK with our in-memory private key and wraps it using Maya's public RSA key. The server stores only that recipient-wrapped key."*
+### Chapter 2: End-to-End Telemetry Journey
+- **Action:** Review the 5-stage architecture pipeline card.
+- **Talking Point:** *"Here is the complete zero-knowledge lifecycle: Step 1 occurs in browser memory where the DEK is generated. Step 2 dispatches ciphertext over TLS. In Step 3, FastAPI receives opaque buffers with zero visibility into plaintext. In Step 4, encrypted bytes are written to disk (`.enc`). In Step 5, the relational database only stores metadata and wrapped key envelopes."*
 
-### Chapter 4: In-Memory Decryption & Integrity
-- **Action:** Click **"Open protected file"**.
-- **Talking Point:** *"Decryption occurs directly in memory. AES-GCM verifies the 128-bit authentication tag. If even one byte of ciphertext was altered on the server, decryption aborts with an integrity error."*
+### Chapter 3: Zero-Copy Multi-Party Envelope Sharing
+- **Action:** Select recipient **Adrian Newey** (`Chief Technical Officer`) or **Gianpiero Lambiase** (`Race Engineer`) and click **"Grant Access"**.
+- **Talking Point:** *"Notice what happens during sharing: zero bytes of ciphertext are re-uploaded. Max's browser unwraps the file DEK using his private RSA key in memory and re-wraps it with Adrian Newey's RSA-3072 public key. The server acts purely as a blind relay storing the new envelope."*
 
-### Chapter 5: Mathematical Security Proof
-- **Action:** Review the four security guarantee cards on screen.
-- **Talking Point:** *"These four pillars guarantee that even if our backend database is completely dumped by an attacker, not a single file, filename, or private key can be compromised."*
+### Chapter 4: Local Decryption & Live AEAD Tamper Sandbox
+- **Action:** First click **"Decrypt Telemetry in Memory"** to demonstrate verified decryption. Next, toggle the **"Inject Single-Byte Ciphertext Corruption"** switch and click **"Attempt Decryption Under Attack"**.
+- **Talking Point:** *"Notice the result: W3C SubtleCrypto throws an `OperationError: Tag mismatch / authentication failed`. Because AES-256-GCM employs an authenticated tag, tampering with even a single bit causes immediate failure, eliminating chosen-ciphertext and padding oracle attacks."*
+
+### Chapter 5: Security Guarantees & Verification Matrix
+- **Action:** Toggle between the **"Security Guarantees"** and **"Threat & Attack Matrix"** tabs.
+- **Talking Point:** *"This matrix summarizes our formal invariants: complete confidentiality against server compromise, zero plaintexts on disk, cryptographically enforced instant revocation, and zero-knowledge domain separation."*
 
 ---
 
@@ -98,23 +105,18 @@ Direct URL: `http://localhost:5173/demo` (or click **"Start guided demo"** on th
 
 ### Step 5: Revocation & Negative Access Enforcement
 1. Switch back to Alice's window. Click **Manage Shares** on `Annual_Report.pdf`.
-2. Click **Revoke** next to Bob's email.
-3. Switch back to Bob's window and refresh. The file is gone from **Shared With Me**.
-4. In Swagger UI or curl, attempt to call `GET /api/files/{id}/download` using Bob's JWT:
-   - The server immediately returns `404 Not Found`. Access is completely blocked.
+2. Click **Revoke** next to Bob.
+3. Switch back to Bob's window and refresh. Confirm `Annual_Report.pdf` is instantly gone and access is terminated.
 
 ---
 
-## 4. Evaluator Q&A Defense Sheet
+## 4. Key Talking Points for Evaluators & Defense
 
-### Q1: "Can the database administrator read user files?"
-> **Answer:** *"No. The database holds solely opaque Base64 strings: AES-256-GCM encrypted content, encrypted metadata, and RSA-OAEP wrapped keys. The backend has no access to the master password, no access to the private keys, and no mechanism to unwrap file keys."*
+1. **Why not just HTTPS/TLS?**  
+   *TLS only protects data in transit between the client and server. Once it reaches the cloud server, it sits in plaintext in memory and storage unless end-to-end encrypted.*
 
-### Q2: "Why do you store the salt if it's generated by the client?"
-> **Answer:** *"The salt is needed during PBKDF2 derivation to generate the same master key bits. If the salt were lost, the user could never reproduce the wrapping key to decrypt their private key. Storing the salt in the database is completely standard (salts are non-secret random values used to prevent rainbow table attacks)."*
+2. **How is Vaultline different from typical client-side encryption?**  
+   *Vaultline separates authentication from data decryption using dual-branch HKDF, and uses multi-party RSA-OAEP envelope encryption so files can be shared instantly without re-encrypting or re-uploading large payloads.*
 
-### Q3: "What happens if an attacker tampers with the ciphertext on disk?"
-> **Answer:** *"AES-256-GCM is an Authenticated Encryption with Associated Data (AEAD) cipher. It appends a 128-bit authentication tag. If even a single bit of ciphertext or metadata is altered, the Web Crypto API's `decrypt()` method fails immediately with an `OperationError`."*
-
-### Q4: "Why does refreshing the page log the user out?"
-> **Answer:** *"This is an intentional zero-knowledge security invariant. Vaultline keeps the unwrapped RSA private key strictly in volatile React heap memory. Writing an unwrapped private key to `localStorage` or cookies would expose it to disk theft and XSS attacks."*
+3. **What happens if the server database is compromised?**  
+   *The attacker only gets opaque ciphertext files (`.enc`), encrypted metadata blobs, and wrapped DEKs. They cannot decrypt anything without the client's raw master password or in-memory private key.*

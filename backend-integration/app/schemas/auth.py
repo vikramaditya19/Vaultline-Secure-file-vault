@@ -19,9 +19,9 @@ Security Note:
 - This dual-hashing ensures server can't decrypt files even with DB access
 """
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from typing import Optional
 
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 # ==================== SHARED MODELS ====================
 

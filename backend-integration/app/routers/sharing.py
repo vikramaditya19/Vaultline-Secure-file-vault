@@ -36,24 +36,24 @@ Limitations (Documented):
 ✗ Can't change permissions after sharing
 """
 
-from fastapi import APIRouter, HTTPException, status, Depends
-from sqlalchemy.orm import Session
 from typing import List
 
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
 from app.database import get_db
-from app.models import User, File, Share
+from app.models import File, Share, User
 from app.schemas.sharing import (
-    ShareFileRequest,
-    ShareFileResponse,
     ListSharesResponse,
-    ShareListItem,
     RevokeShareRequest,
     RevokeShareResponse,
     SharedWithMeItem,
     SharedWithMeResponse,
+    ShareFileRequest,
+    ShareFileResponse,
+    ShareListItem,
 )
-from app.utils.jwt_utils import get_current_user, TokenData
-
+from app.utils.jwt_utils import TokenData, get_current_user
 
 # Create router
 router = APIRouter(

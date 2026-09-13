@@ -12,11 +12,11 @@ Why Pydantic Settings?
 - Clear documentation: all config in one place
 """
 
+from pathlib import Path
 from typing import Literal
 
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 

@@ -1,6 +1,7 @@
 import os
-from pathlib import Path
 import shutil
+from pathlib import Path
+
 import pytest
 
 TEST_DB = Path(__file__).resolve().parent / "vaultline-test.db"
@@ -9,11 +10,11 @@ os.environ["DATABASE_URL"] = f"sqlite:///{TEST_DB.as_posix()}"
 os.environ["SECRET_KEY"] = "test-only-secret"
 os.environ["UPLOAD_DIR"] = str(TEST_UPLOADS)
 
-from fastapi.testclient import TestClient
-from app.database import engine
 from app.config import Settings
+from app.database import engine
 from app.main import app
 from app.models import Base
+from fastapi.testclient import TestClient
 
 
 def register_payload(email="owner@example.com"):

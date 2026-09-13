@@ -1,0 +1,114 @@
+.ambient-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  pointer-events: none;
+  overflow: hidden !important;
+  contain: strict;
+  z-index: 0;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.38;
+  will-change: transform;
+}
+
+.ambient-orb--terracotta {
+  width: 440px;
+  height: 440px;
+  top: -80px;
+  right: -40px;
+  background: radial-gradient(circle, #e29482 0%, rgba(212, 125, 103, 0.2) 70%, transparent 100%);
+  animation: orbDrift1 24s ease-in-out infinite alternate;
+}
+
+.ambient-orb--sage {
+  width: 480px;
+  height: 480px;
+  bottom: -100px;
+  left: -60px;
+  background: radial-gradient(circle, #a8ad8d 0%, rgba(140, 146, 115, 0.22) 70%, transparent 100%);
+  animation: orbDrift2 30s ease-in-out infinite alternate;
+}
+
+.ambient-orb--amber {
+  width: 380px;
+  height: 380px;
+  top: 35%;
+  left: 40%;
+  background: radial-gradient(circle, #eedbc5 0%, rgba(230, 206, 180, 0.18) 70%, transparent 100%);
+  animation: orbDrift3 26s ease-in-out infinite alternate;
+}
+
+.ambient-grid-mesh {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(160, 146, 133, 0.12) 1px, transparent 0);
+  background-size: 36px 36px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 20%, transparent 95%);
+  animation: gridShimmer 12s ease-in-out infinite alternate;
+}
+
+.ambient-particles {
+  position: absolute;
+  inset: 0;
+}
+
+.particle {
+  position: absolute;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-primary-dark, #b9604d);
+  opacity: 0.2;
+  letter-spacing: 0.1em;
+  user-select: none;
+  animation: particleFloat 18s linear infinite;
+}
+
+.p1 { left: 12%; top: 18%; animation-duration: 22s; animation-delay: 0s; font-size: 16px; }
+.p2 { left: 80%; top: 24%; animation-duration: 26s; animation-delay: -3s; }
+.p3 { left: 25%; top: 78%; animation-duration: 20s; animation-delay: -6s; font-size: 18px; }
+.p4 { left: 72%; top: 68%; animation-duration: 24s; animation-delay: -8s; }
+.p5 { left: 84%; top: 82%; animation-duration: 28s; animation-delay: -11s; }
+.p6 { left: 8%; top: 62%; animation-duration: 23s; animation-delay: -14s; font-size: 15px; }
+.p7 { left: 45%; top: 12%; animation-duration: 25s; animation-delay: -17s; }
+.p8 { left: 60%; top: 88%; animation-duration: 21s; animation-delay: -2s; font-size: 14px; }
+
+@keyframes orbDrift1 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-40px, 60px) scale(1.05); }
+  100% { transform: translate(-20px, 30px) scale(0.98); }
+}
+
+@keyframes orbDrift2 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, -40px) scale(1.04); }
+  100% { transform: translate(25px, -60px) scale(0.98); }
+}
+
+@keyframes orbDrift3 {
+  0% { transform: translate(0, 0) scale(0.98); }
+  50% { transform: translate(-30px, -30px) scale(1.06); }
+  100% { transform: translate(30px, 20px) scale(1); }
+}
+
+@keyframes gridShimmer {
+  0% { opacity: 0.65; transform: translateY(0); }
+  100% { opacity: 0.9; transform: translateY(-4px); }
+}
+
+@keyframes particleFloat {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  15% { opacity: 0.22; }
+  85% { opacity: 0.22; }
+  100% { transform: translateY(-35px) rotate(10deg); opacity: 0; }
+}
